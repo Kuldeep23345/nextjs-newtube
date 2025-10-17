@@ -7,24 +7,20 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
+// -------------------- TABLES --------------------
+
 export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     clerkId: text("clerk_id").unique().notNull(),
     name: text("name").notNull(),
-
-    /// add banner fields
     imageUrl: text("image_url").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)]
 );
-
-export const userRelations = relations(users, ({ many }) => ({
-  videos: many(videos),
-}));
 
 export const categories = pgTable(
   "categories",
@@ -37,25 +33,30 @@ export const categories = pgTable(
   },
   (t) => [uniqueIndex("name_idx").on(t.name)]
 );
-export const categoryRelations = relations(users, ({ many }) => ({
-  videos: many(videos),
-}));
 
 export const videos = pgTable("videos", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   description: text("description"),
   userId: uuid("user_id")
-    .references(() => users.id, {
-      onDelete: "cascade",
-    })
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
-  categoryId: uuid("category_id").references(() => categories.id,{
-    onDelete:'set null'
+  categoryId: uuid("category_id").references(() => categories.id, {
+    onDelete: "set null",
   }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+// -------------------- RELATIONS --------------------
+
+export const userRelations = relations(users, ({ many }) => ({
+  videos: many(videos),
+}));
+
+export const categoryRelations = relations(categories, ({ many }) => ({
+  videos: many(videos),
+}));
 
 export const videoRelations = relations(videos, ({ one }) => ({
   user: one(users, {
