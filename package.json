@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev:all":"concurrently \"bun run dev:webhook\" \"bun run dev\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:webhook":"ngrok http --url=bardish-implicational-dagmar.ngrok-free.dev 3000"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.34.3",
@@ -17,6 +19,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.552.0",
