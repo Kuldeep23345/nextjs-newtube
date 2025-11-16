@@ -10,10 +10,10 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
   const { categoryId } = await searchParams;
-  void trpc.categroies.getMany.prefetch();
+  void trpc.categories.getMany.prefetch();
   return (
     <HydrateClient>
-      <HomeView categoryId={categoryId}/>
+      <HomeView categoryId={categoryId} />
     </HydrateClient>
   );
 }
