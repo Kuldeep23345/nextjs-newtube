@@ -37,6 +37,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { videoUpdateSchema } from "@/db/schema";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface FormSectionProps {
   videoId: string;
@@ -57,16 +58,27 @@ const FormSectionSkeleton = () => {
 };
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
+  const utils = trpc.useUtils();
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
+
+  const update = trpc.videos.update.useMutation({
+    onSuccess: () => {
+      utils.studio.getMany.invalidate();
+      utils.studio.getOne.invalidate({ id: videoId });
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
 
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
     defaultValues: video,
   });
 
-  const onSubmit = async (data: z.infer<typeof videoUpdateSchema>) => {
-    console.log(data);
+  const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
+    update.mutate(data);
   };
 
   return (
@@ -80,7 +92,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             </p>
           </div>
           <div className="flex items-center gap-x-2">
-            <Button type="submit" disabled={false}>
+            <Button type="submit" disabled={update.isPending}>
               Save
             </Button>
             <DropdownMenu>
