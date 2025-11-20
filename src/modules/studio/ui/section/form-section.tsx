@@ -49,6 +49,10 @@ import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 import Link from "next/link";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { THUMBNAIL_FALLBACK } from "@/modules/videos/types";
+
+
 
 interface FormSectionProps {
   videoId: string;
@@ -70,7 +74,7 @@ const FormSectionSkeleton = () => {
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const utils = trpc.useUtils();
-  const router = useRouter()
+  const router = useRouter();
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
 
@@ -88,7 +92,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     onSuccess: () => {
       utils.studio.getMany.invalidate();
       toast.success("Video removed");
-      router.push('/studio')
+      router.push("/studio");
     },
     onError: () => {
       toast.error("Something went wrong");
@@ -138,7 +142,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={()=>remove.mutate({id:videoId})}>
+                <DropdownMenuItem
+                  onClick={() => remove.mutate({ id: videoId })}
+                >
                   <TrashIcon className="size-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -184,6 +190,27 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              name="thumbnailUrl"
+              control={form.control}
+              render={() => (
+                <FormItem>
+                  <FormLabel>Thumbnail</FormLabel>
+                  <FormControl>
+                    <div className="p-0.5 border border-dashed border-neutral-400 relative h-[84px]
+                    w-[153px] group">
+                      <Image
+                      src={video.thumbnailUrl || THUMBNAIL_FALLBACK}
+                      className="object-cover"
+                      fill
+                      alt="Thumbnail"/>
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="categoryId"
