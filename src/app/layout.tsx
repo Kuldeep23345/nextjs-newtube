@@ -23,10 +23,11 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl={"/"}>
       <html lang="en">
         <body className={inter.className}>
-
           <TRPCProvider>
-            <Toaster/>
-            {children}</TRPCProvider>
+            <Toaster />
+
+            {children}
+          </TRPCProvider>
         </body>
       </html>
     </ClerkProvider>

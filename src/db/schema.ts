@@ -10,7 +10,7 @@ import {
   PgTableWithColumns,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { createSelectSchema as createZodSelectSchema } from "drizzle-zod"
+import { createSelectSchema as createZodSelectSchema } from "drizzle-zod";
 export const users = pgTable(
   "users",
   {
@@ -67,7 +67,10 @@ export const videos = pgTable("videos", {
   muxTrackId: text("mux_track_id").unique(),
   muxTrackStatus: text("mux_track_status"),
   thumbnailUrl: text("thumbnail_url"),
+  thumbnailKey: text("thumbnail_key"),
+
   previewUrl: text("preview_url"),
+  previewKey: text("preview_key"),
   duration: integer("duration").default(0).notNull(),
   visibility: videoVisibility("visibility").default("private").notNull(),
   userId: uuid("user_id").references(() => users.id, {
@@ -81,11 +84,9 @@ export const videos = pgTable("videos", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-
-
-export const videoSelectSchema = createZodSelectSchema(videos)
-export const videoInsertSchema = createZodSelectSchema(videos)
-export const videoUpdateSchema = createZodSelectSchema(videos)
+export const videoSelectSchema = createZodSelectSchema(videos);
+export const videoInsertSchema = createZodSelectSchema(videos);
+export const videoUpdateSchema = createZodSelectSchema(videos);
 
 // relations
 
@@ -99,7 +100,371 @@ export const videoRelations = relations(videos, ({ one }) => ({
     references: [categories.id],
   }),
 }));
-function createSelectSchema(videos: PgTableWithColumns<{ name: "videos"; schema: undefined; columns: { id: PgColumn<{ name: "id"; tableName: "videos"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: true; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; title: PgColumn<{ name: "name"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; description: PgColumn<{ name: "description"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxStatus: PgColumn<{ name: "mux_status"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxAssetId: PgColumn<{ name: "mux_asset_id"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxUploadId: PgColumn<{ name: "mux_upload_id"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxPlaybackId: PgColumn<{ name: "mux_playback_id"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxTrackId: PgColumn<{ name: "mux_track_id"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; muxTrackStatus: PgColumn<{ name: "mux_track_status"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; thumbnailUrl: PgColumn<{ name: "thumbnail_url"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; previewUrl: PgColumn<{ name: "preview_url"; tableName: "videos"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: [string, ...string[]]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; duration: PgColumn<{ name: "duration"; tableName: "videos"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: true; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; visibility: PgColumn<{ name: "visibility"; tableName: "videos"; dataType: "string"; columnType: "PgEnumColumn"; data: "private" | "public"; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: ["private", "public"]; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; userId: PgColumn<{ name: "user_id"; tableName: "videos"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; categoryId: PgColumn<{ name: "category_id"; tableName: "videos"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; createdAt: PgColumn<{ name: "created_at"; tableName: "videos"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; updatedAt: PgColumn<{ name: "updated_at"; tableName: "videos"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }, {}, {}>; }; dialect: "pg"; }>) {
+function createSelectSchema(
+  videos: PgTableWithColumns<{
+    name: "videos";
+    schema: undefined;
+    columns: {
+      id: PgColumn<
+        {
+          name: "id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgUUID";
+          data: string;
+          driverParam: string;
+          notNull: true;
+          hasDefault: true;
+          isPrimaryKey: true;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      title: PgColumn<
+        {
+          name: "name";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: true;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      description: PgColumn<
+        {
+          name: "description";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxStatus: PgColumn<
+        {
+          name: "mux_status";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxAssetId: PgColumn<
+        {
+          name: "mux_asset_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxUploadId: PgColumn<
+        {
+          name: "mux_upload_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxPlaybackId: PgColumn<
+        {
+          name: "mux_playback_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxTrackId: PgColumn<
+        {
+          name: "mux_track_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      muxTrackStatus: PgColumn<
+        {
+          name: "mux_track_status";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      thumbnailUrl: PgColumn<
+        {
+          name: "thumbnail_url";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      previewUrl: PgColumn<
+        {
+          name: "preview_url";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgText";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: [string, ...string[]];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      duration: PgColumn<
+        {
+          name: "duration";
+          tableName: "videos";
+          dataType: "number";
+          columnType: "PgInteger";
+          data: number;
+          driverParam: string | number;
+          notNull: true;
+          hasDefault: true;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      visibility: PgColumn<
+        {
+          name: "visibility";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgEnumColumn";
+          data: "private" | "public";
+          driverParam: string;
+          notNull: true;
+          hasDefault: true;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: ["private", "public"];
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      userId: PgColumn<
+        {
+          name: "user_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgUUID";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      categoryId: PgColumn<
+        {
+          name: "category_id";
+          tableName: "videos";
+          dataType: "string";
+          columnType: "PgUUID";
+          data: string;
+          driverParam: string;
+          notNull: false;
+          hasDefault: false;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      createdAt: PgColumn<
+        {
+          name: "created_at";
+          tableName: "videos";
+          dataType: "date";
+          columnType: "PgTimestamp";
+          data: Date;
+          driverParam: string;
+          notNull: true;
+          hasDefault: true;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+      updatedAt: PgColumn<
+        {
+          name: "updated_at";
+          tableName: "videos";
+          dataType: "date";
+          columnType: "PgTimestamp";
+          data: Date;
+          driverParam: string;
+          notNull: true;
+          hasDefault: true;
+          isPrimaryKey: false;
+          isAutoincrement: false;
+          hasRuntimeDefault: false;
+          enumValues: undefined;
+          baseColumn: never;
+          identity: undefined;
+          generated: undefined;
+        },
+        {},
+        {}
+      >;
+    };
+    dialect: "pg";
+  }>
+) {
   throw new Error("Function not implemented.");
 }
-
