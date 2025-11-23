@@ -57,7 +57,6 @@ import {
   TrashIcon,
 } from "lucide-react";
 
-
 interface FormSectionProps {
   videoId: string;
 }
@@ -106,9 +105,18 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const restoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
     onSuccess: () => {
       utils.studio.getMany.invalidate();
-      utils.studio.getOne.invalidate({id:videoId});
+      utils.studio.getOne.invalidate({ id: videoId });
       toast.success("Thumbnail restored");
-  
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+  const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
+    onSuccess: () => {
+      toast.success("Background job started", {
+        description: "This may take some time",
+      });
     },
     onError: () => {
       toast.error("Something went wrong");
@@ -253,11 +261,17 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                               <ImagePlusIcon className="size-4 mr-1" />
                               Change
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => generateThumbnail.mutate({ id: videoId })}
+                            >
                               <SparklesIcon className="size-4 mr-1" />
                               AI-generated
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={()=> restoreThumbnail.mutate({id:videoId})}>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                restoreThumbnail.mutate({ id: videoId })
+                              }
+                            >
                               <RotateCcwIcon className="size-4 mr-1" />
                               Restore
                             </DropdownMenuItem>
